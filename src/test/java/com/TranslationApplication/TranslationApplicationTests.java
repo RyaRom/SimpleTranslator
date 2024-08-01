@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,10 @@ class TranslationApplicationTests {
 
 	@Test
 	void contextLoads() {
+	}
+
+	@Test
+	void dbTest(){
 	}
 
 	@Test

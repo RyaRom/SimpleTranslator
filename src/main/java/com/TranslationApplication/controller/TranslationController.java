@@ -1,5 +1,6 @@
 package com.TranslationApplication.controller;
 
+import com.TranslationApplication.service.RequestService;
 import com.TranslationApplication.service.TranslationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 
 public class TranslationController {
     private final TranslationService translationService;
+    private final RequestService requestService;
 
-    public TranslationController(TranslationService translationService) {
+    public TranslationController(TranslationService translationService, RequestService requestService) {
         this.translationService = translationService;
+        this.requestService = requestService;
     }
 
     @PostMapping("/translate")
@@ -23,9 +27,14 @@ public class TranslationController {
         String translated = translationService.translate(text, source, target);
         return ResponseEntity.ok(request.getRemoteAddr());
     }
-    @GetMapping("/myip")
-    public ResponseEntity<?> getIp(HttpServletRequest request){
-        return ResponseEntity.ok(request.getRemoteAddr() + " - IP    " + request.getRemoteUser()+ "  - User");
+    @GetMapping("/test")
+    public String log(HttpServletRequest request){
+        requestService.saveLog(request.getRemoteAddr(), "mock","mock");
+        return "success";
+    }
+    @GetMapping("/logs")
+    public ResponseEntity<?> getLogs(){
+        return ResponseEntity.ok(requestService.getLogs());
     }
 }
 
