@@ -25,7 +25,7 @@ class TranslationApplicationTests {
 	@Test
 	void APITest(){
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "https://translate.fedilab.app/translate";
+			String url = "https://translate.fedilab.app/translate";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);

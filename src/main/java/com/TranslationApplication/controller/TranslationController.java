@@ -1,5 +1,6 @@
 package com.TranslationApplication.controller;
 
+import com.TranslationApplication.model.TranslationRequestDTO;
 import com.TranslationApplication.service.RequestService;
 import com.TranslationApplication.service.TranslationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,14 +24,21 @@ public class TranslationController {
     }
 
     @PostMapping("/translate")
-    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody String text, @NonNull @RequestBody String source, @NonNull @RequestBody String target){
-        String translated = translationService.translate(text, source, target);
-        return ResponseEntity.ok(request.getRemoteAddr());
-    }
-    @GetMapping("/test")
-    public String log(HttpServletRequest request){
-        requestService.saveLog(request.getRemoteAddr(), "mock","mock");
-        return "success";
+    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest){
+        String text = translationRequest.getText();
+        String source = translationRequest.getSource();
+        String target = translationRequest.getTarget();
+        String translated;
+
+        try {
+            translated = translationService.translate(text, source, target);
+        } catch (Exception e) {
+            translated = "Failed to translate";
+            requestService.saveLog(request.getRemoteAddr(), text, translated);
+            return ResponseEntity.badRequest().build();
+        }
+        requestService.saveLog(request.getRemoteAddr(), text, translated);
+        return ResponseEntity.ok(translated);
     }
     @GetMapping("/logs")
     public ResponseEntity<?> getLogs(){
