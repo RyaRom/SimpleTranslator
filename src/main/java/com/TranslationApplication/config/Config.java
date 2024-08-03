@@ -22,12 +22,13 @@ public class Config {
     public RestTemplate restTemplate(){
         return new RestTemplate();
     }
-    @Bean
+    @Bean(name = "threadPoolForWords")
     public Executor taskExecutor(){
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(10);
         taskExecutor.setMaxPoolSize(10);
         taskExecutor.setQueueCapacity(10000);
+        taskExecutor.setThreadNamePrefix("Thread_for_word_");
         taskExecutor.initialize();
         return taskExecutor;
     }

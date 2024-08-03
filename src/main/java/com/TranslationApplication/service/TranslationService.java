@@ -2,39 +2,34 @@ package com.TranslationApplication.service;
 
 import com.TranslationApplication.model.TranslationRequestDTO;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TranslationService {
-    private final RestTemplate restTemplate;
-    private final String url = "https://translate.fedilab.app/translate";
+    private final AsyncApiService asyncApiService;
 
-    public TranslationService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public TranslationService(AsyncApiService asyncApiService) {
+        this.asyncApiService = asyncApiService;
     }
 
     public String translateAsync(String text, String source, String target){
         List<CompletableFuture<String>> futures = Arrays.stream(text.split("\\s+"))
-                .map(word->translate(word, source, target)).toList();
+                .map(word->asyncApiService.translate(word, source, target)).toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         return futures.stream().map(f-> {
             try {
                 return f.get();
             } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException("Async translation error   " +e);
+                log.error("Error in async operations  ", e);
+                throw new RuntimeException(e);
             }
         }).collect(Collectors.joining(" "));
     }
@@ -45,20 +40,6 @@ public class TranslationService {
         String source = translationRequest.getSource();
         String target = translationRequest.getTarget();
         if (async) return translateAsync(text,source,target);
-        else return translate(text, source, target).get();
-    }
-
-    @Async("taskExecutor")
-    public CompletableFuture<String> translate(String text, String source, String target){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> request= new HashMap<>();
-        request.put("q", text);
-        request.put("source", source);
-        request.put("target", target);
-
-        HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(request, httpHeaders);
-        Map<String, String> response = restTemplate.postForObject(url, httpEntity,Map.class);
-        return CompletableFuture.completedFuture(response.get("translatedText"));
+        else return asyncApiService.translate(text, source, target).get();
     }
 }
