@@ -23,21 +23,17 @@ public class TranslationController {
         this.requestService = requestService;
     }
 
+    @PostMapping("/translate/single_thread")
+    public ResponseEntity<?> translateInOneThread(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest){
+        String translated= translationService.translateRequest(translationRequest, false);
+        requestService.saveLog(request.getRemoteAddr(), translationRequest.getText(), translated);
+        return ResponseEntity.ok(translated);
+    }
+
     @PostMapping("/translate")
     public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest){
-        String text = translationRequest.getText();
-        String source = translationRequest.getSource();
-        String target = translationRequest.getTarget();
-        String translated;
-
-        try {
-            translated = translationService.translate(text, source, target);
-        } catch (Exception e) {
-            translated = "Failed to translate";
-            requestService.saveLog(request.getRemoteAddr(), text, translated);
-            return ResponseEntity.badRequest().build();
-        }
-        requestService.saveLog(request.getRemoteAddr(), text, translated);
+        String translated= translationService.translateRequest(translationRequest, true);
+        requestService.saveLog(request.getRemoteAddr(), translationRequest.getText(), translated);
         return ResponseEntity.ok(translated);
     }
     @GetMapping("/logs")
