@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +19,13 @@ class TranslationApplicationTests {
 	}
 
 	@Test
+	void dbTest(){
+	}
+
+	@Test
 	void APITest(){
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "https://translate.fedilab.app/translate";
+			String url = "https://translate.fedilab.app/translate";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
