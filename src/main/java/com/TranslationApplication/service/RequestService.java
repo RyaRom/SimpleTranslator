@@ -2,6 +2,7 @@ package com.TranslationApplication.service;
 
 import com.TranslationApplication.model.RequestLogDTO;
 import com.TranslationApplication.repository.RequestRepo;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -16,6 +17,8 @@ public class RequestService {
     public RequestService(RequestRepo requestRepo) {
         this.requestRepo = requestRepo;
     }
+
+    @Async
     public void saveLog(String ip, String input, String output){
         RequestLogDTO requestLogDTO = new RequestLogDTO();
         requestLogDTO.setIp(ip);
