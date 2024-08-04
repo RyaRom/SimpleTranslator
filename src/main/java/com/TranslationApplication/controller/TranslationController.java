@@ -6,10 +6,7 @@ import com.TranslationApplication.service.TranslationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -23,16 +20,9 @@ public class TranslationController {
         this.requestService = requestService;
     }
 
-    @PostMapping("/translate/single_thread")
-    public ResponseEntity<?> translateInOneThread(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest){
-        String translated= translationService.translateRequest(translationRequest, false);
-        requestService.saveLog(request.getRemoteAddr(), translationRequest.getText(), translated);
-        return ResponseEntity.ok(translated);
-    }
-
     @PostMapping("/translate")
-    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest){
-        String translated= translationService.translateRequest(translationRequest, true);
+    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest, @RequestParam(defaultValue = "false") Boolean correctTranslation){
+        String translated= translationService.translateRequest(translationRequest, correctTranslation);
         requestService.saveLog(request.getRemoteAddr(), translationRequest.getText(), translated);
         return ResponseEntity.ok(translated);
     }

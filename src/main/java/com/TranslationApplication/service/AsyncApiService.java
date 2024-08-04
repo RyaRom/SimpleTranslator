@@ -26,7 +26,7 @@ public class AsyncApiService {
     }
 
     @Async("threadPoolForWords")
-    public CompletableFuture<String> translate(String text, String source, String target){
+    public CompletableFuture<String> translate(String text, String source, String target) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         Map<String, String> request= new HashMap<>();
@@ -37,6 +37,8 @@ public class AsyncApiService {
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(request, httpHeaders);
         Map<String, String> response = restTemplate.postForObject(url, httpEntity,Map.class);
         String translated = response.get("translatedText");
+
+        if (response.containsKey("error")) log.error("Error in external API {}", response.get("error"));
 
         log.info("The word {} is translated in thread {} into result {}; lang: {} -> {}; Used ", text, Thread.currentThread(), translated, source, target);
 

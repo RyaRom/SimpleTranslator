@@ -1,5 +1,6 @@
 package com.TranslationApplication.config;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.time.Duration;
 import java.util.concurrent.Executor;
 
 @Configuration
@@ -19,15 +21,17 @@ public class Config {
         return new JdbcTemplate(dataSource);
     }
     @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
+        return restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(600))
+                .setReadTimeout(Duration.ofSeconds(600))
+                .build();
     }
     @Bean(name = "threadPoolForWords")
     public Executor taskExecutor(){
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(10);
-        taskExecutor.setMaxPoolSize(10);
-        taskExecutor.setQueueCapacity(10000);
+        taskExecutor.setCorePoolSize(50);
+        taskExecutor.setMaxPoolSize(50);
+        taskExecutor.setQueueCapacity(500);
         taskExecutor.setThreadNamePrefix("Thread_for_word_");
         taskExecutor.initialize();
         return taskExecutor;
