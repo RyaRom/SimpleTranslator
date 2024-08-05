@@ -2,6 +2,7 @@ package com.TranslationApplication.service;
 
 import com.TranslationApplication.model.RequestLogDTO;
 import com.TranslationApplication.repository.RequestRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class RequestService {
     private final RequestRepo requestRepo;
@@ -25,6 +27,7 @@ public class RequestService {
         requestLogDTO.setInput(input);
         requestLogDTO.setOutput(output);
         requestLogDTO.setDate(currentDateTime());
+        log.info("user {} translates {} into {}", ip, input, output);
         requestRepo.save(requestLogDTO);
     }
     public List<RequestLogDTO> getLogs(){
