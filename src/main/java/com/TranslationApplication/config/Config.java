@@ -1,5 +1,6 @@
 package com.TranslationApplication.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,8 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class Config {
+    @Value("${translation.threadPoolSize}")
+    private Integer maxThreadPoolSize;
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){
         return new JdbcTemplate(dataSource);
@@ -29,8 +32,8 @@ public class Config {
     @Bean(name = "threadPoolForWords")
     public Executor taskExecutor(){
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(50);
-        taskExecutor.setMaxPoolSize(50);
+        taskExecutor.setCorePoolSize(maxThreadPoolSize);
+        taskExecutor.setMaxPoolSize(maxThreadPoolSize);
         taskExecutor.setQueueCapacity(500);
         taskExecutor.setThreadNamePrefix("Thread_for_word_");
         taskExecutor.initialize();

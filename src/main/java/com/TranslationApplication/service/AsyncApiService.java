@@ -40,7 +40,7 @@ public class AsyncApiService {
 
         if (response.containsKey("error")) log.error("Error in external API {}", response.get("error"));
 
-        log.info("The word {} is translated in thread {} into result {}; lang: {} -> {}; Used ", text, Thread.currentThread(), translated, source, target);
+        log.info("The word {} is translated in thread {} into result {}; lang: {} -> {}", text, Thread.currentThread(), translated, source, target);
 
         return CompletableFuture.completedFuture(translated);
     }
