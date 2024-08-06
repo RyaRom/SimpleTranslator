@@ -33,19 +33,8 @@
                     return response.text();
                 })
                 .then(text => {
-                document.getElementById('response').textContent = text;
-            })
-            // .then(response=>{
-            //     alert(response)
-            //     return response;
-            // })
-            // .then(resp => resp.text())
-            // .then(resp => {
-            //     alert("Response received " + resp); // Debug alert
-            //     return resp.text();
-            // })
-            // .then(resp => document.getElementById('response').textContent = resp)
-            // .catch(err => console.log(err));
+                    document.getElementById('response').textContent = text;
+                })
         }
     </script>
 </head>
