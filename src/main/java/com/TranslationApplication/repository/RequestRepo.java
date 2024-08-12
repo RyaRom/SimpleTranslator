@@ -17,19 +17,19 @@ public class RequestRepo {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<RequestLogDTO> findAll(){
+    public List<RequestLogDTO> findAll() {
         return jdbcTemplate.query("SELECT * FROM USER_LOG", new Mapper());
     }
 
-    public void save(RequestLogDTO requestLogDTO){
+    public void save(RequestLogDTO requestLogDTO) {
         jdbcTemplate.update("INSERT INTO USER_LOG (ip, input, output, date) VALUES ( ?,?,?,? )", requestLogDTO.getIp(), requestLogDTO.getInput(), requestLogDTO.getOutput(), requestLogDTO.getDate());
     }
 
-    private static class Mapper implements RowMapper<RequestLogDTO>{
+    private static class Mapper implements RowMapper<RequestLogDTO> {
 
         @Override
         public RequestLogDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-            RequestLogDTO request= new RequestLogDTO();
+            RequestLogDTO request = new RequestLogDTO();
             request.setIp(rs.getString("ip"));
             request.setInput(rs.getString("input"));
             request.setOutput(rs.getString("output"));

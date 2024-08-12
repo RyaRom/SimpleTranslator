@@ -3,31 +3,36 @@ package com.TranslationApplication.controller;
 import com.TranslationApplication.model.TranslationRequestDTO;
 import com.TranslationApplication.service.RequestService;
 import com.TranslationApplication.service.TranslationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-
+@RequiredArgsConstructor
+@Tag(name = "Translator")
 public class TranslationController {
     private final TranslationService translationService;
     private final RequestService requestService;
 
-    public TranslationController(TranslationService translationService, RequestService requestService) {
-        this.translationService = translationService;
-        this.requestService = requestService;
-    }
-
+    @Operation(summary = "translate", description = "Translate text", parameters = {
+            @Parameter(name = "correctTranslation", description = "Determine the translation method: `false` for translating by words, `true` for translating by chunks.")
+    })
     @PostMapping("/translate")
-    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest, @RequestParam(defaultValue = "false") Boolean correctTranslation){
-        String translated= translationService.translateRequest(translationRequest, correctTranslation);
+    public ResponseEntity<?> translate(HttpServletRequest request, @NonNull @RequestBody TranslationRequestDTO translationRequest, @RequestParam(defaultValue = "true") Boolean correctTranslation) {
+        String translated = translationService.translateRequest(translationRequest, correctTranslation);
         requestService.saveLog(request.getRemoteAddr(), translationRequest.getText(), translated);
         return ResponseEntity.ok(translated);
     }
+
+    @Operation(summary = "logs", description = "Get translation logs")
     @GetMapping("/logs")
-    public ResponseEntity<?> getLogs(){
+    public ResponseEntity<?> getLogs() {
         return ResponseEntity.ok(requestService.getLogs());
     }
 }

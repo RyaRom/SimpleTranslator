@@ -21,7 +21,7 @@ public class RequestService {
     }
 
     @Async
-    public void saveLog(String ip, String input, String output){
+    public void saveLog(String ip, String input, String output) {
         RequestLogDTO requestLogDTO = new RequestLogDTO();
         requestLogDTO.setIp(ip);
         requestLogDTO.setInput(input);
@@ -30,10 +30,12 @@ public class RequestService {
         log.info("user {} translates {} into {}", ip, input, output);
         requestRepo.save(requestLogDTO);
     }
-    public List<RequestLogDTO> getLogs(){
+
+    public List<RequestLogDTO> getLogs() {
         return requestRepo.findAll();
     }
-    private Timestamp currentDateTime(){
+
+    private Timestamp currentDateTime() {
         ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Europe/Moscow"));
         return Timestamp.from(zonedDateTime.toInstant());
     }
