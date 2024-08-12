@@ -29,13 +29,13 @@ public class AsyncApiService {
     public CompletableFuture<String> translate(String text, String source, String target) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> request= new HashMap<>();
+        Map<String, String> request = new HashMap<>();
         request.put("q", text);
         request.put("source", source);
         request.put("target", target);
 
         HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(request, httpHeaders);
-        Map<String, String> response = restTemplate.postForObject(url, httpEntity,Map.class);
+        Map<String, String> response = restTemplate.postForObject(url, httpEntity, Map.class);
         String translated = response.get("translatedText");
 
         if (response.containsKey("error")) log.error("Error in external API {}", response.get("error"));
