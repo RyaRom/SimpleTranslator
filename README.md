@@ -7,7 +7,6 @@ The Simple asynchronous translation application:
 3. **Swagger UI**: Swagger docs
 4. **Main page**: Simple UI for API
 
-
 ## Endpoints
 
 ### Translate Text
