@@ -8,8 +8,10 @@ import lombok.Data;
 public class TranslationRequestDTO {
     @Schema(description = "text to translate", example = "hello world")
     private String text;
+
     @Schema(description = "source language", example = "en")
     private String source;
+
     @Schema(description = "target language", example = "ru")
     private String target;
 }

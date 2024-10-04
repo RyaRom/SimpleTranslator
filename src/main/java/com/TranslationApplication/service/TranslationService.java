@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class TranslationService {
     private final AsyncApiService asyncApiService;
+
     @Value("${translation.chunk.size}")
     private Integer chunkSize;
 
