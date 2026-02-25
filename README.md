@@ -1,6 +1,6 @@
 ## Overview
 
-The Simple asynchronous translation api:
+The Simple translation api:
 
 1. **Translate Text**: Translate text.
 2. **Get Translation Logs**: Retrieve logs of all translation requests with user IP.
